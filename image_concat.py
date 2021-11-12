@@ -10,7 +10,13 @@ from PIL import Image, ImageDraw, ImageFont, ImageColor
 import os
 
 
-def data_transforms(img, method=Image.BILINEAR, scale=False):
+def data_transforms(img, method=Image.BILINEAR, size=None):
+    """
+    :param img: 待转换的图片，Image格式
+    :param method:插值的方法
+    :param size: 转换的大小
+    :return: 转换后的图片，Image格式
+    """
     return img.resize((300,400), method)
 
 
@@ -167,6 +173,16 @@ def image_output(output_path, images_1, images_2, save_name='result'):
     save_image(output, path,nrow=images_1.shape[0], padding=0, normalize=True)
 
 def image_concat(input_path_1,input_path_2,output_path,save_name='result',data_transforms=data_transforms):
+    """
+
+    :param input_path_1: 合并的图片的第一个文件夹路径
+    :param input_path_2: 合并的图片的第二个文件夹路径
+    :param output_path: 输出合并图片的路径
+    :param save_name: 保存图片的名称，默认result
+    :param data_transforms: 图片大小的更改
+    :return: None，结果只有保存图片，无输出结果
+
+    """
     images1=image_dataloader(input_path_1,data_transfrom=data_transforms)
     images2=image_dataloader(input_path_2,data_transfrom=data_transforms)
 
@@ -178,5 +194,5 @@ if __name__ == '__main__':
     input2_path = 'D:\Desktop\plan\Old2Life\output\\restored_image'
     output_path = 'D:\Desktop\plan\Old2Life\output'
 
-    image_concat(input1_path,input2_path,output_path,save_name='result_')
+    image_concat(input1_path,input2_path,output_path,save_name='result')
 
