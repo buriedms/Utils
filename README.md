@@ -4,7 +4,7 @@
 
 ## 工具内容
 
-### image_concat.py
+### 1. image_concat.py
 
 **功能**：拼接两个文件夹当中的图像
 
