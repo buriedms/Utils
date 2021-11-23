@@ -12,7 +12,7 @@ if __name__ == '__main__':
     fold_path_to=r'D:\Files\GitHub\Utils\temp'
     extend='.jpg'
     with open(txt_path,'r') as f:
-        name_list=[name.strip()+extend for name in f.readlines()]
+        name_list=[name.strip()+extend if '.'not in name else name.strip() for name in f.readlines()]
     print(name_list)
     print('txt length :',len(name_list))
     for name in name_list:
