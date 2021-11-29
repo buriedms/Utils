@@ -1,7 +1,7 @@
 import torch
 import paddle
 import os
-from model import Res_Deeplab, FCDiscriminator
+from model_paddle import DeeplabMulti,Res_Deeplab
 
 EXTENSIONS = ['pth', ]
 
@@ -88,15 +88,25 @@ def pth2pdparams_fold(pth_fold_path, model=None):
         # pdparams_path = pdparams_path.split('-')[0] + '.pdparams'
 
         state_pth = torch.load(state_pth_path, map_location='cpu')
-        state_pdparams = pth2pdparams_by_state(state_pth)
-        if model:
-            model = Res_Deeplab()
-            model_test(model, state_pdparams)
+        new_params = model.state_dict().copy()
+        for i in state_pth:
+            # Scale.layer5.conv2d_list.3.weight
+            i_parts = i.split('.')
+            # print i_parts
+            if not i_parts[1] == 'layer5':
+                new_params['.'.join(i_parts[1:])] = state_pth[i]
+                # print i_parts
+
+        state_pdparams = pth2pdparams_by_state(new_params)
+
+        model_test(model, state_pdparams)
+
         paddle.save(state_pdparams, pdparams_path)
         print(f'Successful conversion !!! || {pdparams_path}\n')
 
 
 if __name__ == '__main__':
     state_pth_path = r'D:\Files\GitHub\Utils\checkpoints'
-    model = Res_Deeplab()
+    model = DeeplabMulti(num_classes=19)
+    # model = Res_Deeplab(num_classes=19)
     pth2pdparams_fold(state_pth_path, model=model)

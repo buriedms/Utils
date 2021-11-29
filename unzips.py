@@ -54,5 +54,5 @@ if __name__ == '__main__':
     fold_path_from = r'D:\Files\GitHub\AdaptSegNet-Paddle\data\GTA5'
     fold_path_to = r'D:\Files\GitHub\AdaptSegNet-Paddle\data\GTA5'
     # os.popen(f'rd/s/q \"{fold_path_to}\"')
-    unzips(fold_path_from, fold_path_to,new_flod=False)
-    # delete_old(fold_path_to)
+    # unzips(fold_path_from, fold_path_to,new_flod=False)
+    delete_old(fold_path_to)# 慎用 ！！！
