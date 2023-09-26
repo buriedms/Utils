@@ -1,0 +1,39 @@
+### files ###
+
+temp/
+
+checkpoints/
+
+checkpoints_new/
+
+.idea/
+
+result/
+
+imgs/
+
+### igitignore template
+# ===========files
+# model file
+*.pth
+*.ckpt
+*.pt
+# zip file
+*.zip
+*tar.gz
+*.gz
+*.rar
+# data file
+*.png
+*.jpg
+*.tif
+*.jpeg
+
+# dir
+*checkpint*/
+*output*/
+*runs*/
+*results*/
+*log*/
+*pretrain*/
+*inference*/
