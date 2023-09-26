@@ -1,3 +1,7 @@
+"""
+拼接图片，转成输出大图
+"""
+
 import paddle
 from typing import Union, Optional, List, Tuple, Text, BinaryIO
 import pathlib
@@ -10,14 +14,18 @@ from PIL import Image, ImageDraw, ImageFont, ImageColor
 import os
 
 
-def data_transforms(img, method=Image.BILINEAR, size=None):
+def data_transforms(img, method=Image.BILINEAR,):
     """
     :param img: 待转换的图片，Image格式
     :param method:插值的方法
     :param size: 转换的大小
     :return: 转换后的图片，Image格式
     """
-    return img.resize((300,400), method)
+    if size :
+        img_size=size
+    else:
+        img_size=img.size
+    return img.resize(img_size, method)
 
 
 @paddle.no_grad()
@@ -166,13 +174,18 @@ def image_dataloader(path, data_transfrom=None):
     return inputs
 
 
-def image_output(output_path, images_1, images_2, save_name='result'):
-    path = output_path + '/' + save_name + '.png'
-    output = paddle.concat((images_1, images_2), 0)
+def image_output(output_path,image_list, save_name='result'):
+    output=image_list[0]
+    nrow=output.shape[0]
+    print(len(image_list))
+    # raise NotImplementedError
+    for image in image_list[1:]:
+        output = paddle.concat((output,image), 0)
     output = (output + 1.0) / 2.0
-    save_image(output, path,nrow=images_1.shape[0], padding=0, normalize=True)
+    path = output_path + '/' + save_name + '.png'
+    save_image(output, path,nrow=nrow, padding=0, normalize=True)
 
-def image_concat(input_path_1,input_path_2,output_path,save_name='result',data_transforms=data_transforms):
+def image_concat(input_path_list,output_path,save_name='result'):
     """
 
     :param input_path_1: 合并的图片的第一个文件夹路径
@@ -183,16 +196,17 @@ def image_concat(input_path_1,input_path_2,output_path,save_name='result',data_t
     :return: None，结果只有保存图片，无输出结果
 
     """
-    images1=image_dataloader(input_path_1,data_transfrom=data_transforms)
-    images2=image_dataloader(input_path_2,data_transfrom=data_transforms)
+    image_list=[image_dataloader(input_path,data_transfrom=data_transforms) for input_path in input_path_list]
 
-    image_output(output_path,images1,images2,save_name=save_name)
+    image_output(output_path,image_list,save_name=save_name)
 
 if __name__ == '__main__':
+    size = None
+    input_path_list=[r"D:\Files\GitHub\Utils\temp\floder1",
+                     r"D:\Files\GitHub\Utils\temp\floder2",
+                     r"D:\Files\GitHub\Utils\temp\floder3"]
 
-    input1_path = 'D:\Desktop\plan\Old2Life\output\origin'
-    input2_path = 'D:\Desktop\plan\Old2Life\output\\restored_image'
-    output_path = 'D:\Desktop\plan\Old2Life\output'
+    output_path = r"D:\Files\GitHub\Utils\temp\result"
 
-    image_concat(input1_path,input2_path,output_path,save_name='result')
+    image_concat(input_path_list,output_path,save_name='result')
 

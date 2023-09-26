@@ -1,3 +1,5 @@
+# logger的撰写范本
+
 import os
 
 def gen_logger(save_path=None,name=None,chlr=False,mode='w'):

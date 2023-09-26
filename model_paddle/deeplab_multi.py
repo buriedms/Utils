@@ -193,8 +193,9 @@ class ResNetMulti(nn.Layer):
         x = self.layer2(x)
 
         x = self.layer3(x)
+        # print('paddle:', x[0][0])
         x1 = self.layer5(x)
-
+        print('paddle:', x1[0][0][0])
         x2 = self.layer4(x)
         x2 = self.layer6(x2)
 

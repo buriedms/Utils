@@ -1,9 +1,21 @@
 import os
 import subprocess
 
+'''
+批量解压指定文件夹下的所有压缩包，以下参数含义：
+
+ZIP_LIST:指定可访问的压缩包形式
+EXT_LIST:指定可识别的压缩包拓展名
+ZIP7_PATH:解压程序所在路径
+FOLD_PATH_FROM:待解压的压缩包源路径
+FOLD_PATH_TO:所有文件解压的解压位置
+'''
 ZIP_LIST = ['.zip']
 EXT_LIST = ['.zip']
 ZIP7_PATH = 'D:\\7zip\\7-Zip\\7z.exe'
+FOLD_PATH_FROM = r'E:\datasets\GTA5'
+FOLD_PATH_TO = r'E:\data\GTA5'
+NEW_FOLD = False
 
 
 def delete_old(path, ext_list=None):
@@ -17,13 +29,13 @@ def delete_old(path, ext_list=None):
             os.remove(src_path)
 
 
-def unzips(fold_path_from, fold_path_to, zip_list=None, zip7_path=ZIP7_PATH,new_flod=False):
+def unzips(folder_path_from, folder_path_to, zip_list=None, zip7_path=ZIP7_PATH, new_flod=False):
     flag = False
     if not zip_list:
         zip_list = ZIP_LIST
-    for root, dirs, files in os.walk(fold_path_from):
+    for root, dirs, files in os.walk(folder_path_from):
         # print('====',root,dirs)
-        root_tar = root.replace(fold_path_from, fold_path_to)
+        root_tar = root.replace(folder_path_from, folder_path_to)
         os.makedirs(root_tar, exist_ok=True)
         for file in files:
             # print(os.path.splitext(file))
@@ -50,9 +62,8 @@ def unzips(fold_path_from, fold_path_to, zip_list=None, zip7_path=ZIP7_PATH,new_
 
 
 if __name__ == '__main__':
-    txt_path = r'D:\Files\GitHub\AdvSemiSeg-Paddle\dataset\voc_list\val.txt'
-    fold_path_from = r'D:\Files\GitHub\AdaptSegNet-Paddle\data\GTA5'
-    fold_path_to = r'D:\Files\GitHub\AdaptSegNet-Paddle\data\GTA5'
-    # os.popen(f'rd/s/q \"{fold_path_to}\"')
-    # unzips(fold_path_from, fold_path_to,new_flod=False)
-    delete_old(fold_path_to)# 慎用 ！！！
+    fold_path_from = FOLD_PATH_FROM
+    fold_path_to = FOLD_PATH_TO
+    os.popen(f'rd/s/q \"{fold_path_to}\"')
+    unzips(fold_path_from, fold_path_to, new_flod=NEW_FOLD)
+    # delete_old(fold_path_to)# 慎用 ！！！

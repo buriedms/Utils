@@ -88,6 +88,9 @@ def pth2pdparams_fold(pth_fold_path, model=None):
         # pdparams_path = pdparams_path.split('-')[0] + '.pdparams'
 
         state_pth = torch.load(state_pth_path, map_location='cpu')
+        state_pth_list=list(state_pth.values())
+        # print(state_pth_list[0].numpy()[0][0][0])
+        # raise None
         new_params = model.state_dict().copy()
         for i in state_pth:
             # Scale.layer5.conv2d_list.3.weight
