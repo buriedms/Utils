@@ -16,6 +16,10 @@
 * [8. pdparams2ckpt.py](#8-pdparams2ckptpy)
 * [9. pth2ckpt.py](#9-pth2ckptpy)
 * [10. pth2pdparams.py](#10-pth2pdparamspy)
+* [11. openi.py](#11-openipy)
+* [12. platform_process.py](#12-platformprocesspy)
+* [13. set_debug.py](#13-setdebugpy)
+* [14. set_environment.py](#14-setenvironmentpy)
 
 <!-- TOC -->
 
@@ -180,7 +184,6 @@ None, 仅提供案例
 | case_1             | -              | -                                                                              |
 | case_2             | -              | -                                                                              |
 
-
 **支持平台**：torch & mindspore
 
 ### [10. pth2pdparams.py](./tools/model_transform/pth2pdparams.py)
@@ -194,3 +197,101 @@ None, 仅提供案例
 None, 仅提供案例
 
 **支持平台**：paddle & torch
+
+### [11. openi.py](./tools/openi/openi.py)
+
+**功能**：实现数据文件从obs桶和运行环境之间的相互转移
+
+**原理**：通过官方moxing库进行实现，并且对于特殊zip文件，使用unzip命令进行解压
+
+**参数解析**
+
+| 函数                        | 参数             | 说明                                                  |
+|---------------------------|----------------|-----------------------------------------------------|
+| openi_dataset_to_Env      | -              | 启智集群：openi copy single dataset to training image    |
+| -                         | data_url       | 数据的远程路径url                                          |
+| -                         | data_dir       | 数据在训练环境当中需要的目标存储位置                                  |
+| openi_multidataset_to_env | -              | 启智集群：copy single or multi dataset to training image |
+| -                         | multi_data_url | 官方参数，多个数据集的url路径                                    |
+| -                         | data_dir       | 数据在训练环境当中需要的目标存储位置                                  |
+| -                         | keep_name      | 是否保留zip文件名字作为上一级目录                                  |
+| multidataset_to_env       | -              | 智算平台：copy single or multi dataset to training image |
+| -                         | multi_data_url | 官方参数，多个数据集的url路径                                    |
+| -                         | data_dir       | 数据在训练环境当中需要的目标存储位置                                  |
+| -                         | keep_name      | 是否保留zip文件名字作为上一级目录                                  |
+| pretrain_to_env           | -              | 均可使用：copy pretrain to training image                |
+| -                         | pretrain_url   | 预训练模型的远程路径url                                       |
+| -                         | pretrain_dir   | 预训练模型训练环境当中保存位置                                     |
+| env_to_openi              | -              | 均可使用：upload output to openi                         |
+| -                         | train_dir      | 训练结果文件在训练环境当中的存储位置                                  |
+| -                         | train_url      | 训练结果文件上传的远程路径url                                    |
+
+**支持平台 **：mindspore
+
+### [12. platform_process.py](./tools/openi/platform_process.py)
+
+**功能**：实现多个平台的数据载入和导出过程。预设：启智集群，智算集群，modelarts。测试通过：启智集群，智算集群
+
+**原理**：调用[openi.py](./tools/openi/openi.py)文件进行实现，  
+对于训练数据统一保存到当前训练环境的/cache/data目录，  
+对于模型文件统一保存到当前训练环境的/cache/pretrained目录，  
+对于输出目录统一设置为/cache/output目录。  
+通过软连接命令`ln -s [source path] [target path]`将文件目录进行连接起来，具体代码：
+
+```shell
+ln -s /cache/data ./data
+ln -s /cache/pretrained ./pretrained
+ln -s /cache/output ./output
+```
+
+因此具体使用时，从当前运行环境的`./data`目录进行训练数据读取，
+从`./pretrained`进行预训练模型读取，
+将训练日志及相应模型信息保存到`./output`即可
+
+**参数解析**
+
+| 函数                  | 参数              | 说明                       |
+|---------------------|-----------------|--------------------------|
+| platform_preprocess | args            | 参数类型,需要具备以下参数            |
+| -                   | args.model_arts | 当前平台是否为modelarts         |
+| -                   | args.openi      | 当前平台是否为openi             |
+| -                   | args.platform   | 若平台为openi,则使用的集群是否为ZS或QZ |
+| -                   | args.device_id  | 当前训练环境所使用的卡id            |
+| -                   | args.device_num | 当前训练环境所使用的卡数目            |
+
+### [13. set_debug.py](./tools/openi/set_debug.py)
+
+**功能**：在debug超参数为True时，修改某些参数的值，减小消耗显存使之跑通。
+
+**原理**：None
+
+**参数解析**
+
+| 参数           | 说明           |
+|--------------|--------------|
+| config       | 参数类型，以下为必要参数 |
+| config.debug | 是否启用debug    |
+
+注意： 具体内容根据实际情况进行自定义设置
+
+### [14. set_environment.py](./tools/openi/set_environment.py)
+
+**功能**：根据设定的超参数，初始化训练环境，包括种子设置、多卡相关设置等等，另外包含混合精度相关设置函数
+
+**原理**：通过mindspore官方库相关函数进行实现
+
+**参数解析**：
+
+| 函数              | 参数     | 说明                                                                                                                               |
+|-----------------|--------|----------------------------------------------------------------------------------------------------------------------------------|
+| set_seed        | -      | 设置全局使用的种子，保证训练的可复现。                                                                                                              |
+| -               | config | 参数类型，需要包含参数config.seed                                                                                                           |
+| set_device      | -      | Set device and ParallelMode(if device_num > 1)                                                                                   |
+| -               | args   | 参数类型，需要包含参数[args.device_target, args.device_id, args.device_num, args.gradients_mean, args.parameter_broadcast, args.output_dir] |
+| set_environment | -      | 设置训练环境，包括全局种子、训练模式、训练设备设置                                                                                                        |
+| -               | config | 参数类型                                                                                                                             |
+| cast_amp        | -      | cast network amp_level                                                                                                           |
+| -               | args   | 参数类型，需要包含参数args.amp_level                                                                                                        |
+| -               | net    | nn.Cell类型，对模型进行转换精度类型                                                                                                            |
+
+**支持平台**: Mindspore
