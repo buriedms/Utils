@@ -24,8 +24,11 @@
 ### [1. image_concat.py](tools/image_concat.py)
 
 **功能**：拼接两个文件夹当中的图像
+
 **原理**：None
+
 **支持平台**：paddle
+
 **参数解析**
 
 | 参 数          | 说明               | 
