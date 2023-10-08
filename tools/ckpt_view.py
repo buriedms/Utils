@@ -1,3 +1,7 @@
+"""
+查看指定ckpt文件的参数名和内置参数情况，默认可以输出到相同位置的log文件，也同样具有返回值return
+"""
+
 import os
 import mindspore
 

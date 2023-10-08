@@ -1,6 +1,10 @@
+"""
+根据txt内容，从指定目录下复制文件到目标路径
+"""
 from tqdm import tqdm, trange
 import os
 import shutil
+
 
 
 def mkdir_tree(fold_path_from, fold_path_to):
@@ -24,6 +28,14 @@ def get_txt(txt_path, extend=None):
 
 
 def copy_by_text(fold_path_from, fold_path_to, txt_path, extend=None):
+    """
+
+    :param fold_path_from:源文件目录所在路径
+    :param fold_path_to:目标目录所在路径
+    :param txt_path:选定的copy文件内容的txt文件所在路径
+    :param extend:当txt内容仅有文件名，没有后缀时，可以设定该项，例如extend='.png'
+    :return:None
+    """
     mkdir_tree(fold_path_from, fold_path_to)
     name_list = get_txt(txt_path, extend=extend)
     for root, dirs, files in os.walk(fold_path_from):
@@ -42,8 +54,8 @@ def copy_by_text(fold_path_from, fold_path_to, txt_path, extend=None):
 if __name__ == '__main__':
     fold_path_from = r'E:\datasets\Cityscapes\leftImg8bit_trainvaltest'
     fold_path_to = r'D:\Files\GitHub\AdaptSegNet-Paddle\data\Cityscapes\data'
-    txt_list=[r'D:\Files\GitHub\AdaptSegNet-Paddle\dataset\cityscapes_list\val.txt',
-              r'D:\Files\GitHub\AdaptSegNet-Paddle\dataset\cityscapes_list\train.txt',
-              r'D:\Files\GitHub\AdaptSegNet-Paddle\dataset\cityscapes_list\label.txt']
+    txt_list = [r'D:\Files\GitHub\AdaptSegNet-Paddle\dataset\cityscapes_list\val.txt',
+                r'D:\Files\GitHub\AdaptSegNet-Paddle\dataset\cityscapes_list\train.txt',
+                r'D:\Files\GitHub\AdaptSegNet-Paddle\dataset\cityscapes_list\label.txt']
     for txt_path in txt_list:
-        copy_by_text(fold_path_from,fold_path_to,txt_path)
+        copy_by_text(fold_path_from, fold_path_to, txt_path)

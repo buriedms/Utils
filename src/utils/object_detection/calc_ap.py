@@ -203,7 +203,7 @@ if __name__ == "__main__":
     stats = [np.concatenate(x, 0) for x in zip(*stats)]  # to numpy
     if len(stats) and stats[0].any():
         print(" res : ")
-        p, r, ap, f1, ap_class = ap_per_class(*stats, plot=False, save_dir="./", names="hello")
+        p, r, ap, f1, ap_class = ap_per_class(*stats, plot=False, save_dir="/", names="hello")
         print("p = ", p)
         print("r = ", r)
         print("ap = ", ap)

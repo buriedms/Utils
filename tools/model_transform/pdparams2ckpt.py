@@ -1,4 +1,3 @@
-import argparse
 import numpy as np
 
 # import torch
@@ -9,8 +8,6 @@ import numpy as np
 # import torch.nn.functional as F
 
 import mindspore
-import mindspore.nn as nn
-import mindspore.ops as ops
 from mindspore import context
 
 context.set_context(mode=context.GRAPH_MODE)
@@ -18,21 +15,18 @@ context.set_context(mode=context.GRAPH_MODE)
 import paddle
 # import paddle.nn as nn
 
-import sys
-import os
-import os.path as osp
-import matplotlib.pyplot as plt
-import random
+from src.models.mindspore import get_deeplab_v2
+from src.models.paddlepaddle import DeeplabMulti
 
-from model_mindspore.deeplabv2 import get_deeplab_v2
-from model_paddle.deeplab_multi import DeeplabMulti
-
-
-# from model_paddle import DeeplabMulti
+# from paddlepaddle import DeeplabMulti
 # import torch
-
-
 # from utils.loss import cross_entropy2d
+
+"""
+paddle model to torch model
+"""
+
+
 def update_name(list_old):
     list = ['.'.join(name.split('.')[0:]) for name in list_old]
     list_ = []
@@ -110,9 +104,9 @@ print(out2_p.shape, out2_p[0][0][0])
 # print('保存参数：', list(model.parameters_dict().values())[0][0][0][0])
 # parameters_ms = [{'name': name, 'data': data} for name, data in model.parameters_and_names(name_prefix='net_G')]
 #
-# mindspore.save_checkpoint(parameters_ms, r'model_mindspore/ResNet_best_DeepLab_2.ckpt')
+# mindspore.save_checkpoint(parameters_ms, r'mindspore/ResNet_best_DeepLab_2.ckpt')
 #
-# state_dict = mindspore.load_checkpoint(r'model_mindspore/ResNet_best_DeepLab.ckpt')
+# state_dict = mindspore.load_checkpoint(r'mindspore/ResNet_best_DeepLab.ckpt')
 # print(state_dict.keys())
 # for key_old, key in zip(keys_ms, state_dict.keys()):
 #     if 'net_G.' + key_old != key:

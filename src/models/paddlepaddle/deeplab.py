@@ -1,7 +1,6 @@
 import paddle
 import paddle.nn as nn
 import numpy as np
-import init
 
 affine_par = True
 

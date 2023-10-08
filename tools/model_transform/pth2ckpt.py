@@ -1,6 +1,3 @@
-import argparse
-import numpy as np
-
 # import torch
 # import torch.nn as nn
 # from torch.utils import data, model_zoo
@@ -9,17 +6,14 @@ import numpy as np
 # import torch.nn.functional as F
 
 import mindspore
-import mindspore.nn as nn
-import mindspore.ops as ops
 
-import sys
-import os
-import os.path as osp
 # import matplotlib.pyplot as plt
-import random
 
-from model_mindspore.deeplab_multi import DeeplabMulti
 import torch
+
+"""
+model:torch To model:mindspore
+"""
 
 
 ### 加载划分函数
@@ -152,7 +146,7 @@ def update_torch_to_ms(pth_saved_path, ms_save_path='', txt_save_path='', space=
     :param pth_saved_path: pth load path
     :param ms_save_path:  ckpt save path
     :param txt_save_path: pth 2 ckpt log save path
-    :param space: control the space in log file
+    :param space: control the space in log file, default: 80
     :param name_change: the parameter's name change rule: pth to ckpt ; type: dict{pth_name:ckpt_name}
     :param filter_list: The filter list of parameters : list ['pth_name1','pth_name2']
     :return: the changed ckpt
@@ -227,10 +221,16 @@ def update_torch_to_ms(pth_saved_path, ms_save_path='', txt_save_path='', space=
     return {data['name']: data['data'] for data in static_list_ms}
 
 
-if __name__ == '__main__':
-    # pth_saved_path = r"D:\Files\GitHub\Utils\temp\checkpoints\hrnetv2_w48_imagenet_pretrained.pth"
+def case_1():
     # pth_saved_path = r"D:\wendang\Github\seaelm\Utils\temp\model_pth\GTA5_init.pth"
-    pth_saved_path = r"D:\wendang\Github\seaelm\Utils\temp\model_pth\SYNTHIA_init.pth"
+    pth_saved_path = r"/temp/model_pth/SYNTHIA_init.pth"
+    filter_list = ['num_batches_tracked']
+
+    static_dict_ms = update_torch_to_ms(pth_saved_path, filter_list=filter_list)
+
+
+def case_2():
+    pth_saved_path = r"D:\Files\GitHub\Utils\temp\checkpoints\hrnetv2_w48_imagenet_pretrained.pth"
     name_change = {'projection': 'proj',
                    'stages': '',
                    'attn.w_msa': 'attn',
@@ -244,12 +244,27 @@ if __name__ == '__main__':
                    # '0.downsample':'0.blocks.0.downsample',
                    '1.downsample': '0.blocks.1.downsample',
                    '2.downsample': '0.blocks.2.downsample', }
-    # name_change = {}
-    # filter_list = ['layer5', 'layer6']
-    # filter_list = ['num_batches_tracked', 'classifier']
-    # filter_list = ['mask']
-    # filter_list = ['num_batches_tracked', 'incre_modules', 'downsamp_modules', 'final_layer', 'classifier']
+    filter_list = ['num_batches_tracked', 'incre_modules', 'downsamp_modules', 'final_layer', 'classifier']
+    static_dict_ms = update_torch_to_ms(pth_saved_path, name_change=name_change, filter_list=filter_list)
+
+
+if __name__ == '__main__':
+    # pth_saved_path = r"D:\wendang\Github\seaelm\Utils\temp\model_pth\GTA5_init.pth"
+    pth_saved_path = r"/temp/model_pth/SYNTHIA_init.pth"
+    name_change = {'projection': 'proj',
+                   'stages': '',
+                   'attn.w_msa': 'attn',
+                   'relative_position_bias_table': 'relative_bias.relative_position_bias_table',
+                   'relative_position_index': 'relative_bias.index',
+                   'ffn.layers.0.0': 'mlp.fc1',
+                   'ffn.layers.1': 'mlp.fc2',
+                   '1.blocks': '0.blocks.1.blocks',
+                   '2.blocks': '0.blocks.2.blocks',
+                   '3.blocks': '0.blocks.3.blocks',
+                   # '0.downsample':'0.blocks.0.downsample',
+                   '1.downsample': '0.blocks.1.downsample',
+                   '2.downsample': '0.blocks.2.downsample', }
+
     filter_list = ['num_batches_tracked']
 
-    # static_dict_ms = update_torch_to_ms(pth_saved_path, name_change=name_change, filter_list=filter_list)
     static_dict_ms = update_torch_to_ms(pth_saved_path, filter_list=filter_list)

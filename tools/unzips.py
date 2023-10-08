@@ -1,6 +1,3 @@
-import os
-import subprocess
-
 '''
 批量解压指定文件夹下的所有压缩包，以下参数含义：
 
@@ -10,6 +7,10 @@ ZIP7_PATH:解压程序所在路径
 FOLD_PATH_FROM:待解压的压缩包源路径
 FOLD_PATH_TO:所有文件解压的解压位置
 '''
+
+import os
+import subprocess
+
 ZIP_LIST = ['.zip']
 EXT_LIST = ['.zip']
 ZIP7_PATH = 'D:\\7zip\\7-Zip\\7z.exe'

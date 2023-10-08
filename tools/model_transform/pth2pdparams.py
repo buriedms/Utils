@@ -1,7 +1,11 @@
 import torch
 import paddle
 import os
-from model_paddle import DeeplabMulti,Res_Deeplab
+from src.models.paddlepaddle import DeeplabMulti
+
+"""
+model:torch To model:paddlepaddle
+"""
 
 EXTENSIONS = ['pth', ]
 
