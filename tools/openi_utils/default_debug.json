@@ -1,0 +1,18 @@
+{
+  "dataset": {
+    "batch_size": 2,
+    "GTA5": {
+      "input_size": [128, 300],
+      "data_dir": "E:/data/GTA5"
+    },
+    "Cityscapes": {
+      "input_size": [128, 400],
+      "data_dir": "E:/data/Cityscapes"
+    }
+  },
+  "train": {
+    "print_step": 1,
+    "epoch": 1
+  }
+}
+

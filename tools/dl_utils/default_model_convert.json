@@ -1,0 +1,18 @@
+{
+  "source_type": "torch",
+  "dest_type": "paddle",
+  "source_path": "./your_model.pth",
+  "dest_path": "./your_model.pdparams",
+  "model_fn": "src.models.paddlepaddle.deeplab.deeplabv3plus_resnet50",
+  "model_args": {
+    "num_classes": 21,
+    "pretrained": false
+  },
+  "name_change": {
+    "old_prefix": "new_prefix"
+  },
+  "filter_list": [
+    "layer5"
+  ]
+}
+
