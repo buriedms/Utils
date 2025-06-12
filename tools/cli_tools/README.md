@@ -13,8 +13,6 @@
 | image_concat.py      | 批量拼接两个文件夹下的图片 | python image_concat.py --src1 dir1 --src2 dir2 --dst out |
 | unzips.py            | 批量解压指定目录下的zip文件 | python unzips.py --src zip_dir --dst out_dir |
 | copy_by_txt.py       | 按txt文件内容批量复制文件   | python copy_by_txt.py --txt file.txt --dst out_dir |
-| multi_process.py     | 多进程运行模板             | 作为范本参考 |
-| read_excel_write_txt.py | excel内容提取到txt      | python read_excel_write_txt.py --excel file.xlsx --txt out.txt |
 
 ## 使用说明
 
